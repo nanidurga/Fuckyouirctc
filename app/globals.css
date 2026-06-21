@@ -364,3 +364,34 @@ a { color: inherit; }
 .page-intro { padding: 48px 0 8px; }
 .page-intro h1 { font-family: var(--font-display); text-transform: uppercase; font-size: clamp(2.4rem, 6vw, 4rem); margin: 12px 0 0; line-height: 0.92; }
 .page-intro p { color: var(--ink-soft); max-width: 640px; margin-top: 14px; }
+
+/* ── data dashboard ─────────────────────────────────────────────────────── */
+.chart { display: flex; flex-direction: column; gap: 14px; margin-top: 8px; }
+.bar-row { display: grid; grid-template-columns: 200px 1fr 56px; align-items: center; gap: 14px; }
+.bar-row .bar-label {
+  font-family: var(--font-mono); font-size: 0.78rem; text-transform: uppercase;
+  letter-spacing: 0.04em; color: var(--ink-soft); white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
+}
+.bar-track { height: 18px; background: var(--paper-2); border: 2px solid var(--ink); position: relative; }
+.bar-fill {
+  height: 100%; min-width: 2px; background: var(--stamp);
+  /* dot-matrix fill so it reads like printout, never a flat web bar */
+  background-image: radial-gradient(var(--stamp-deep) 1px, transparent 1.4px);
+  background-size: 7px 7px;
+}
+.bar-row .bar-num { font-family: var(--font-mono); font-size: 0.92rem; text-align: right; color: var(--ink); }
+.chart-empty { font-family: var(--font-mono); font-size: 0.8rem; color: var(--ink-faint); }
+.chart-months { display: flex; align-items: flex-end; gap: 10px; height: 160px; margin-top: 10px; }
+.month-col { display: flex; flex-direction: column; align-items: center; gap: 8px; flex: 1; height: 100%; justify-content: flex-end; }
+.month-col .col-bar {
+  width: 100%; max-width: 46px; min-height: 3px; background: var(--signal);
+  background-image: radial-gradient(#14503f 1px, transparent 1.4px); background-size: 7px 7px;
+  border: 2px solid var(--ink); border-bottom: none;
+}
+.month-col .col-lab { font-family: var(--font-mono); font-size: 0.62rem; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.04em; }
+.month-col .col-num { font-family: var(--font-mono); font-size: 0.7rem; color: var(--ink); }
+@media (max-width: 640px) {
+  .bar-row { grid-template-columns: 120px 1fr 40px; gap: 10px; }
+  .bar-row .bar-label { font-size: 0.68rem; }
+}

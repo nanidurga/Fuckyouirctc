@@ -1,4 +1,4 @@
-import type { CategoryId } from "./data";
+import { CATEGORIES, type CategoryId } from "./data";
 import { getSupabase } from "./supabase";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -207,6 +207,81 @@ export async function addPledge(): Promise<number> {
     .select("id", { count: "exact", head: true });
   if (countErr) throw new Error(`Supabase addPledge count: ${countErr.message}`);
   return count ?? 0;
+}
+
+// ── Public dashboard (aggregate patterns) ───────────────────────────────────
+//
+// Everything here is derived from APPROVED submissions only and published in
+// aggregate — counts by type, city, and month. Never an individual identity.
+// This is the honest version of the roadmap's "data dashboards": it reports the
+// shape of the record we actually hold, not scraped booking data.
+
+export type DashboardData = {
+  total: number;
+  withEvidence: number;
+  pledgeCount: number;
+  byCategory: { id: CategoryId; label: string; count: number }[];
+  byCity: { name: string; count: number }[];
+  byMonth: { month: string; count: number }[];
+};
+
+type AggRow = { category: string; city: string | null; has_evidence: boolean; created_at: string };
+
+function aggregate(rows: AggRow[], pledgeCount: number): DashboardData {
+  const catCounts: Record<string, number> = {};
+  const cityCounts: Record<string, number> = {};
+  const monthCounts: Record<string, number> = {};
+  let withEvidence = 0;
+
+  for (const r of rows) {
+    catCounts[r.category] = (catCounts[r.category] ?? 0) + 1;
+    if (r.has_evidence) withEvidence++;
+    const city = r.city?.trim();
+    if (city) cityCounts[city] = (cityCounts[city] ?? 0) + 1;
+    const month = r.created_at.slice(0, 7); // YYYY-MM
+    if (/^\d{4}-\d{2}$/.test(month)) monthCounts[month] = (monthCounts[month] ?? 0) + 1;
+  }
+
+  // All categories, even zero, so the chart shows the full taxonomy.
+  const byCategory = CATEGORIES.map((c) => ({
+    id: c.id,
+    label: c.label,
+    count: catCounts[c.id] ?? 0,
+  })).sort((a, b) => b.count - a.count);
+
+  const byCity = Object.entries(cityCounts)
+    .map(([name, count]) => ({ name, count }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 8);
+
+  const byMonth = Object.entries(monthCounts)
+    .map(([month, count]) => ({ month, count }))
+    .sort((a, b) => (a.month < b.month ? -1 : 1))
+    .slice(-12);
+
+  return { total: rows.length, withEvidence, pledgeCount, byCategory, byCity, byMonth };
+}
+
+export async function getDashboardData(): Promise<DashboardData> {
+  const sb = getSupabase();
+  if (!sb) {
+    const rows: AggRow[] = mem
+      .filter((s) => s.status === "approved")
+      .map((s) => ({
+        category: s.category,
+        city: s.city ?? null,
+        has_evidence: s.hasEvidence,
+        created_at: s.createdAt,
+      }));
+    return aggregate(rows, memPledges);
+  }
+
+  const [approved, pledgeHead] = await Promise.all([
+    sb.from("submissions").select("category, city, has_evidence, created_at").eq("status", "approved"),
+    sb.from("pledges").select("id", { count: "exact", head: true }),
+  ]);
+  if (approved.error) throw new Error(`Supabase getDashboardData: ${approved.error.message}`);
+  return aggregate((approved.data as AggRow[]) ?? [], pledgeHead.count ?? 0);
 }
 
 // ── Moderation ──────────────────────────────────────────────────────────────

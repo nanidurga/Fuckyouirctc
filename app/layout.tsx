@@ -53,6 +53,7 @@ function Masthead() {
         </a>
         <nav className="nav">
           <a href="/wall">Wall of Shame</a>
+          <a href="/data">The Data</a>
           <a href="/act">Take Action</a>
           <a href="/submit">Add Your Story</a>
         </nav>
