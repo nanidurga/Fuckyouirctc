@@ -1,28 +1,33 @@
 import { Suspense } from "react";
 import SubmitForm from "./submit-form";
+import { getDict } from "@/lib/i18n";
+import { CATEGORIES } from "@/lib/data";
 
 export const metadata = {
   title: "Add Your Story — WAITLISTED",
 };
 
-export default function SubmitPage() {
+export default async function SubmitPage() {
+  const t = await getDict();
+  const cats = CATEGORIES.map((c) => ({
+    id: c.id,
+    label: t.categories[c.id].label,
+    codename: t.categories[c.id].codename,
+  }));
+
   return (
     <main>
       <section className="page-intro">
         <div className="wrap">
-          <div className="kicker">File a grievance</div>
-          <h1>Put it on the record.</h1>
-          <p>
-            Tell us what happened. Keep it true and specific &mdash; the stronger the detail and
-            evidence, the harder it is to dismiss. Submissions are reviewed before they go
-            public, and we never publish your name or contact details.
-          </p>
+          <div className="kicker">{t.submitPage.kicker}</div>
+          <h1>{t.submitPage.title}</h1>
+          <p>{t.submitPage.intro}</p>
         </div>
       </section>
       <section className="section" style={{ paddingTop: 24 }}>
         <div className="wrap" style={{ maxWidth: 760 }}>
-          <Suspense fallback={<p className="mono">Loading form…</p>}>
-            <SubmitForm />
+          <Suspense fallback={<p className="mono">{t.form.loading}</p>}>
+            <SubmitForm t={t.form} cats={cats} />
           </Suspense>
         </div>
       </section>

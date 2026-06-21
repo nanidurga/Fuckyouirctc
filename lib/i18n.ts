@@ -71,6 +71,62 @@ type Dict = {
     noDated: string;
     note: string;
   };
+  act: {
+    kicker: string;
+    title: string;
+    intro: string;
+    rti: { no: string; h: string; descHtml: string; template: string; openBtn: string };
+    complaint: {
+      no: string;
+      h: string;
+      cpgramsTag: string;
+      cpgramsTitle: string;
+      cpgramsDesc: string;
+      railmadadTag: string;
+      railmadadTitle: string;
+      railmadadDesc: string;
+    };
+    mp: { no: string; h: string; descHtml: string; letter: string };
+    share: {
+      no: string;
+      h: string;
+      descHtml: string;
+      waTag: string;
+      waTitle: string;
+      waDesc: string;
+      xTag: string;
+      xTitle: string;
+      xDesc: string;
+    };
+  };
+  submitPage: { kicker: string; title: string; intro: string };
+  form: {
+    category: string;
+    headline: string;
+    headlinePh: string;
+    story: string;
+    storyPh: string;
+    routeOpt: string;
+    routePh: string;
+    trainOpt: string;
+    trainPh: string;
+    amountOpt: string;
+    amountPh: string;
+    cityOpt: string;
+    cityPh: string;
+    evidenceLabel: string;
+    truthNote: string;
+    fileBtn: string;
+    filingBtn: string;
+    loading: string;
+    okTag: string;
+    okTitle: string;
+    okMsg: string;
+    okSeeWall: string;
+    okAddAnother: string;
+    errGeneric: string;
+    errNetwork: string;
+  };
 };
 
 const en: Dict = {
@@ -158,6 +214,130 @@ const en: Dict = {
       "Note: Tatkal sellout-time heatmaps need booking-window data we don’t collect or " +
       "scrape. This dashboard reports only what travellers put on the record — by design.",
   },
+  act: {
+    kicker: "03 / The toolkit",
+    title: "Make it official.",
+    intro:
+      "Anger trends for a day. Paperwork they are legally required to answer lasts. Here are " +
+      "the real, legal levers — each one takes minutes.",
+    rti: {
+      no: "TOOL 01 /",
+      h: "File an RTI",
+      descHtml:
+        "The Right to Information Act forces a public answer. If thousands ask the same " +
+        "questions, the data they avoid publishing has to come out. File online at " +
+        '<a href="https://rtionline.gov.in" target="_blank" rel="noopener noreferrer">rtionline.gov.in</a>' +
+        " (₹10 fee). Copy the template below and fill the brackets.",
+      template: `To: The Central Public Information Officer (CPIO),
+Ministry of Railways / IRCTC
+
+Subject: Request for information under the Right to Information Act, 2005
+
+Please provide the following information for the period [START DATE] to [END DATE]:
+
+1. The exact time (to the second) at which Tatkal quota for train no. [TRAIN NO],
+   route [FROM]–[TO], class [AC/SLEEPER], was fully booked on each date.
+2. The number of bookings on the above made through registered agents vs.
+   individual users.
+3. Details of measures taken in the last 12 months to detect and prevent
+   automated/bot bookings, and the number of agent IDs suspended as a result.
+4. The change in the number of Sleeper (SL) and General (GEN) coaches vs.
+   AC coaches on the above route over the last 5 years.
+5. The total amount currently held in user IRCTC eWallet balances, and the
+   process and average time for a user to withdraw eWallet funds to a bank account.
+
+I am an Indian citizen. The application fee of Rs.10 is enclosed/attached.
+
+Name: [YOUR NAME]
+Address: [YOUR ADDRESS]
+Date: [DATE]`,
+      openBtn: "Open RTI Online →",
+    },
+    complaint: {
+      no: "TOOL 02 /",
+      h: "Lodge an official complaint",
+      cpgramsTag: "CPGRAMS",
+      cpgramsTitle: "Central grievance portal →",
+      cpgramsDesc:
+        "The government’s own complaint system. Creates a tracked, time-bound case the ministry must respond to.",
+      railmadadTag: "RAILMADAD",
+      railmadadTitle: "Railway complaint portal →",
+      railmadadDesc:
+        "For journey, refund, cleanliness and safety complaints. Keep the reference number — screenshot the “resolved” that didn’t fix anything.",
+    },
+    mp: {
+      no: "TOOL 03 /",
+      h: "Write to your MP",
+      descHtml:
+        "Your Member of Parliament can raise this in Parliament and with the Railway Ministry. " +
+        'Find yours at <a href="https://sansad.in/ls/members" target="_blank" rel="noopener noreferrer">sansad.in</a>. ' +
+        "A short, specific letter — one failure, one ask — works best.",
+      letter: `Respected [MP NAME],
+
+I am a constituent from [PLACE]. As a regular railway traveller I am
+unable to get confirmed Tatkal tickets — seats vanish within seconds —
+and my money loaded in the IRCTC eWallet cannot be easily withdrawn.
+
+Sleeper and general capacity has not kept pace with our population,
+while premium services expand. I request you to raise in Parliament:
+better non-AC capacity, action on bot/agent bookings, and a clear
+eWallet withdrawal process.
+
+Sincerely,
+[YOUR NAME], [CONSTITUENCY]`,
+    },
+    share: {
+      no: "TOOL 04 /",
+      h: "Share the receipt",
+      descHtml:
+        "Reach in India runs on WhatsApp and X. Forward the record — every link you share now " +
+        "unfurls as a branded WAITLISTED card.",
+      waTag: "WHATSAPP",
+      waTitle: "Forward on WhatsApp →",
+      waDesc: "The distribution layer of India. One forward = one more person on the record.",
+      xTag: "X / TWITTER",
+      xTitle: "Post with #TatkalRoulette →",
+      xDesc: "Where journalists and the ministry actually watch. Tag rail reporters.",
+    },
+  },
+  submitPage: {
+    kicker: "File a grievance",
+    title: "Put it on the record.",
+    intro:
+      "Tell us what happened. Keep it true and specific — the stronger the detail and evidence, " +
+      "the harder it is to dismiss. Submissions are reviewed before they go public, and we never " +
+      "publish your name or contact details.",
+  },
+  form: {
+    category: "Category",
+    headline: "Headline",
+    headlinePh: "e.g. Loaded ₹2,000 in eWallet, can't withdraw it",
+    story: "What happened",
+    storyPh: "Dates, times, what you tried, how it was 'resolved' without being fixed. Be specific.",
+    routeOpt: "Route (optional)",
+    routePh: "NDLS → BCT",
+    trainOpt: "Train no. (optional)",
+    trainPh: "12952",
+    amountOpt: "Amount involved (optional)",
+    amountPh: "₹2,000",
+    cityOpt: "City (optional)",
+    cityPh: "Pune",
+    evidenceLabel:
+      "I have a screenshot / ticket / PNR as evidence and can provide it on request. (Evidence makes your story far harder to dismiss.)",
+    truthNote:
+      "Keep it true. Don’t name individuals as corrupt without proof — we publish patterns, not accusations. We never publish your identity.",
+    fileBtn: "File This Grievance",
+    filingBtn: "Filing…",
+    loading: "Loading form…",
+    okTag: "Received",
+    okTitle: "PNR confirmed.",
+    okMsg:
+      "On the record. Our moderators will review it before it appears on the Wall of Shame. Thank you for speaking up.",
+    okSeeWall: "See the Wall →",
+    okAddAnother: "Add another",
+    errGeneric: "Something went wrong.",
+    errNetwork: "Network error. Please try again.",
+  },
 };
 
 const hi: Dict = {
@@ -242,6 +422,130 @@ const hi: Dict = {
     note:
       "नोट: तत्काल सेलआउट-समय हीटमैप के लिए बुकिंग-विंडो डेटा चाहिए जो हम न एकत्र करते " +
       "हैं न स्क्रैप करते हैं। यह डैशबोर्ड केवल वही दिखाता है जो यात्री रिकॉर्ड पर डालते हैं — यह सोच-समझकर।",
+  },
+  act: {
+    kicker: "03 / टूलकिट",
+    title: "इसे आधिकारिक बनाइए।",
+    intro:
+      "गुस्सा एक दिन ट्रेंड करता है। वह कागज़ी कार्रवाई टिकती है जिसका जवाब देना उनकी कानूनी " +
+      "ज़िम्मेदारी है। ये रहे असली, कानूनी रास्ते — हर एक में बस कुछ मिनट लगते हैं।",
+    rti: {
+      no: "टूल 01 /",
+      h: "RTI दायर करें",
+      descHtml:
+        "सूचना का अधिकार अधिनियम सार्वजनिक जवाब देने पर मजबूर करता है। अगर हज़ारों लोग एक ही " +
+        "सवाल पूछें, तो वह डेटा भी बाहर आना पड़ता है जिसे वे छुपाते हैं। ऑनलाइन दायर करें " +
+        '<a href="https://rtionline.gov.in" target="_blank" rel="noopener noreferrer">rtionline.gov.in</a>' +
+        " पर (₹10 शुल्क)। नीचे दिया टेम्पलेट कॉपी करें और कोष्ठक भरें।",
+      template: `सेवा में: केंद्रीय जन सूचना अधिकारी (CPIO),
+रेल मंत्रालय / IRCTC
+
+विषय: सूचना का अधिकार अधिनियम, 2005 के तहत सूचना हेतु आवेदन
+
+कृपया [प्रारंभ तिथि] से [अंतिम तिथि] की अवधि के लिए निम्नलिखित सूचना दें:
+
+1. प्रत्येक तिथि पर ट्रेन नं. [ट्रेन नं], मार्ग [से]–[तक], श्रेणी [AC/स्लीपर] का
+   तत्काल कोटा किस सटीक समय (सेकंड तक) पूर्णतः बुक हुआ।
+2. उपरोक्त में से कितनी बुकिंग पंजीकृत एजेंटों द्वारा बनाम व्यक्तिगत
+   उपयोगकर्ताओं द्वारा की गईं।
+3. पिछले 12 महीनों में स्वचालित/बॉट बुकिंग का पता लगाने और रोकने हेतु
+   उठाए गए कदमों का विवरण, और परिणामस्वरूप निलंबित एजेंट IDs की संख्या।
+4. उपरोक्त मार्ग पर पिछले 5 वर्षों में स्लीपर (SL) और जनरल (GEN) डिब्बों
+   बनाम AC डिब्बों की संख्या में बदलाव।
+5. वर्तमान में उपयोगकर्ताओं के IRCTC eWallet बैलेंस में रखी कुल राशि, और
+   उपयोगकर्ता द्वारा eWallet राशि बैंक खाते में निकालने की प्रक्रिया व औसत समय।
+
+मैं एक भारतीय नागरिक हूँ। ₹10 का आवेदन शुल्क संलग्न है।
+
+नाम: [आपका नाम]
+पता: [आपका पता]
+दिनांक: [दिनांक]`,
+      openBtn: "RTI ऑनलाइन खोलें →",
+    },
+    complaint: {
+      no: "टूल 02 /",
+      h: "आधिकारिक शिकायत दर्ज करें",
+      cpgramsTag: "CPGRAMS",
+      cpgramsTitle: "केंद्रीय शिकायत पोर्टल →",
+      cpgramsDesc:
+        "सरकार की अपनी शिकायत प्रणाली। एक ट्रैक की गई, समयबद्ध शिकायत बनाती है जिसका मंत्रालय को जवाब देना होता है।",
+      railmadadTag: "RAILMADAD",
+      railmadadTitle: "रेलवे शिकायत पोर्टल →",
+      railmadadDesc:
+        "यात्रा, रिफंड, सफाई और सुरक्षा शिकायतों के लिए। रेफरेंस नंबर संभालें — उस “हल हो गया” का स्क्रीनशॉट लें जिसने कुछ ठीक नहीं किया।",
+    },
+    mp: {
+      no: "टूल 03 /",
+      h: "अपने सांसद को लिखें",
+      descHtml:
+        "आपके सांसद इसे संसद में और रेल मंत्रालय के समक्ष उठा सकते हैं। अपना सांसद यहाँ खोजें " +
+        '<a href="https://sansad.in/ls/members" target="_blank" rel="noopener noreferrer">sansad.in</a>। ' +
+        "एक छोटा, सटीक पत्र — एक समस्या, एक माँग — सबसे असरदार होता है।",
+      letter: `आदरणीय [सांसद का नाम],
+
+मैं [स्थान] का निवासी हूँ। एक नियमित रेल यात्री के रूप में मुझे कन्फर्म
+तत्काल टिकट नहीं मिल पाते — सीटें सेकंडों में गायब हो जाती हैं — और
+IRCTC eWallet में जमा मेरा पैसा आसानी से नहीं निकाला जा सकता।
+
+जनसंख्या के अनुपात में स्लीपर और जनरल क्षमता नहीं बढ़ी है, जबकि
+प्रीमियम सेवाएँ बढ़ रही हैं। मेरा अनुरोध है कि आप संसद में उठाएँ:
+बेहतर नॉन-AC क्षमता, बॉट/एजेंट बुकिंग पर कार्रवाई, और स्पष्ट
+eWallet निकासी प्रक्रिया।
+
+सादर,
+[आपका नाम], [निर्वाचन क्षेत्र]`,
+    },
+    share: {
+      no: "टूल 04 /",
+      h: "रसीद शेयर करें",
+      descHtml:
+        "भारत में पहुँच WhatsApp और X पर चलती है। रिकॉर्ड को आगे भेजें — अब आप जो भी लिंक शेयर " +
+        "करते हैं वह एक ब्रांडेड WAITLISTED कार्ड के रूप में खुलता है।",
+      waTag: "WHATSAPP",
+      waTitle: "WhatsApp पर फॉरवर्ड करें →",
+      waDesc: "भारत की वितरण परत। एक फॉरवर्ड = एक और व्यक्ति रिकॉर्ड पर।",
+      xTag: "X / TWITTER",
+      xTitle: "#TatkalRoulette के साथ पोस्ट करें →",
+      xDesc: "जहाँ पत्रकार और मंत्रालय वाकई नज़र रखते हैं। रेल रिपोर्टरों को टैग करें।",
+    },
+  },
+  submitPage: {
+    kicker: "शिकायत दर्ज करें",
+    title: "इसे रिकॉर्ड पर लाइए।",
+    intro:
+      "बताइए क्या हुआ। इसे सच और सटीक रखें — जितना मज़बूत विवरण और सबूत, उतना ही मुश्किल इसे " +
+      "खारिज करना। शिकायतें सार्वजनिक होने से पहले समीक्षा की जाती हैं, और हम आपका नाम या संपर्क " +
+      "विवरण कभी प्रकाशित नहीं करते।",
+  },
+  form: {
+    category: "श्रेणी",
+    headline: "शीर्षक",
+    headlinePh: "जैसे: eWallet में ₹2,000 डाले, निकाल नहीं पा रहा",
+    story: "क्या हुआ",
+    storyPh: "तारीखें, समय, आपने क्या कोशिश की, बिना ठीक हुए कैसे 'हल' कर दिया गया। सटीक रहें।",
+    routeOpt: "मार्ग (वैकल्पिक)",
+    routePh: "NDLS → BCT",
+    trainOpt: "ट्रेन नं. (वैकल्पिक)",
+    trainPh: "12952",
+    amountOpt: "शामिल राशि (वैकल्पिक)",
+    amountPh: "₹2,000",
+    cityOpt: "शहर (वैकल्पिक)",
+    cityPh: "पुणे",
+    evidenceLabel:
+      "मेरे पास सबूत के तौर पर स्क्रीनशॉट / टिकट / PNR है और माँगे जाने पर दे सकता/सकती हूँ। (सबूत आपकी कहानी को खारिज करना बहुत मुश्किल बना देता है।)",
+    truthNote:
+      "इसे सच रखें। बिना सबूत किसी व्यक्ति को भ्रष्ट न बताएँ — हम पैटर्न प्रकाशित करते हैं, आरोप नहीं। हम आपकी पहचान कभी प्रकाशित नहीं करते।",
+    fileBtn: "यह शिकायत दर्ज करें",
+    filingBtn: "दर्ज हो रही है…",
+    loading: "फॉर्म लोड हो रहा है…",
+    okTag: "प्राप्त हुआ",
+    okTitle: "PNR कन्फर्म।",
+    okMsg:
+      "रिकॉर्ड पर। शर्म की दीवार पर दिखने से पहले हमारे मॉडरेटर इसकी समीक्षा करेंगे। आवाज़ उठाने के लिए धन्यवाद।",
+    okSeeWall: "दीवार देखें →",
+    okAddAnother: "एक और जोड़ें",
+    errGeneric: "कुछ गड़बड़ हो गई।",
+    errNetwork: "नेटवर्क त्रुटि। कृपया फिर कोशिश करें।",
   },
 };
 

@@ -118,10 +118,13 @@ cookie and reloads; server components read it via `getDict()`.
 - `lib/i18n-shared.ts` — `Locale`, `LANG_COOKIE` (server-free; safe for client import).
 - `app/lang-toggle.tsx` — client toggle. Reading the cookie in the root layout makes most pages
   dynamic (ƒ); `/opengraph-image` stays static (separate route, no layout).
-- Translated: chrome, homepage, `/wall`, `/data`. Not yet: `/act`, `/submit`. Sourced/attributed
-  content (witness quote, stat source names) is intentionally **not** re-translated.
+- Translated: **all pages** — chrome, homepage, `/wall`, `/data`, `/act` (incl. RTI + MP
+  templates), `/submit`. Sourced/attributed content (witness quote, stat source names) is
+  intentionally **not** re-translated. `/submit` is a client component, so its server page reads
+  the dict and passes **plain-string** props (`t={t.form}`, `cats={…}`) — never the function-bearing
+  parts of the dict. Server-side API validation messages (`/api/submissions`) are still English.
 - To add a string: add it to the `Dict` type + both `en`/`hi` in `lib/i18n.ts`. To add a language:
-  extend `Locale` + `LOCALES` and add a dictionary.
+  extend `Locale` (in `lib/i18n-shared.ts`) and add a dictionary in `lib/i18n.ts`.
 
 ## Deployment (Vercel)
 
@@ -149,11 +152,10 @@ cookie and reloads; server components read it via `getDict()`.
 2. ~~Auto-generated branded share cards (OG images)~~ — **done** (see Status).
 3. ~~Public data dashboards~~ — **done** as `/data` (aggregate grievance patterns; the
    honest version — true Tatkal sellout-time heatmaps need booking data we don't collect).
-4. **Hindi language versions** — **first pass done** (cookie toggle, no URL change). Chrome
-   (masthead/footer), homepage, `/wall`, and `/data` are translated. **Still English:**
-   `/act` (incl. RTI template) and `/submit` (form + page intro) — translate next, then add
-   regional languages. See "i18n" below.
-5. Evidence upload (Supabase Storage). *(Rate-limiting on submit/pledge is done —
+4. ~~Hindi language versions~~ — **done** (EN/HI cookie toggle, no URL change). All pages
+   translated: chrome, homepage, `/wall`, `/data`, `/act` (incl. RTI + MP templates), `/submit`.
+   Next on this track: regional languages (extend `Locale` + add a dictionary). See "i18n" below.
+5. **Evidence upload (Supabase Storage)** — next up. *(Rate-limiting on submit/pledge is done —
    `lib/rate-limit.ts`.)*
 
 ## Security
