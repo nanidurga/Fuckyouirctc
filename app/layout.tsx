@@ -19,7 +19,13 @@ const dmMono = DM_Mono({
   variable: "--font-mono",
 });
 
+// metadataBase lets Next resolve the auto-generated opengraph-image to an
+// absolute URL (required for link unfurls). Set NEXT_PUBLIC_SITE_URL in Vercel
+// to the production domain; falls back to the default Vercel URL otherwise.
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://waitlisted.vercel.app";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "WAITLISTED — The citizens' record of Indian Railways",
   description:
     "The network grew 23%. The passengers grew 1,344%. WAITLISTED is the public, evidence-backed record of how Indian Railways fails ordinary travellers — and a toolkit to do something about it.",
@@ -28,6 +34,13 @@ export const metadata: Metadata = {
     description:
       "Tatkal in 8 seconds. eWallet money you can't withdraw. Coaches packed like freight. Add your story to the record.",
     type: "website",
+  },
+  twitter: {
+    // No twitter-image file → Next reuses opengraph-image as the Twitter card.
+    card: "summary_large_image",
+    title: "WAITLISTED — The citizens' record of Indian Railways",
+    description:
+      "Tatkal in 8 seconds. eWallet money you can't withdraw. Coaches packed like freight. Add your story to the record.",
   },
 };
 
