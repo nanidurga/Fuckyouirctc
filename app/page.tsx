@@ -1,5 +1,6 @@
 import { HEADLINE_STATS, WITNESS, CATEGORIES, CATEGORY_MAP } from "@/lib/data";
 import { getApprovedSubmissions, getStats } from "@/lib/store";
+import { getDict } from "@/lib/i18n";
 import PledgeBlock from "./pledge-block";
 
 // Reads live counts (approved/pending/pledge) — never statically cache, or the
@@ -7,42 +8,46 @@ import PledgeBlock from "./pledge-block";
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const [stats, submissions] = await Promise.all([getStats(), getApprovedSubmissions()]);
+  const [stats, submissions, t] = await Promise.all([
+    getStats(),
+    getApprovedSubmissions(),
+    getDict(),
+  ]);
   const recent = submissions.slice(0, 3);
+  const h = t.home;
 
   return (
     <main>
       {/* ── HERO ──────────────────────────────────────────────────────────── */}
       <section className="hero">
         <div className="wrap">
-          <div className="kicker reveal d1">
-            Indian Railways · Citizens&rsquo; Reservation Chart of Grievances
-          </div>
+          <div className="kicker reveal d1">{h.kicker}</div>
           <h1 className="reveal d2">
-            The whole nation
+            {h.titlePre}
             <br />
-            is <span className="struck">waitlisted</span>.
+            {h.titleMid}
+            <span className="struck">{h.titleStruck}</span>
+            {h.titlePost}
           </h1>
-          <p className="lede reveal d3">
-            The network grew <b>23%</b>. The passengers grew <b>1,344%</b>. The difference is
-            the crush in your coach, the spinner on Tatkal, and the money stuck in your eWallet.
-            This is the public record &mdash; with your evidence on it.
-          </p>
+          <p
+            className="lede reveal d3"
+            dangerouslySetInnerHTML={{ __html: h.ledeHtml }}
+          />
           <div className="btn-row reveal d4">
             <a className="btn btn-stamp" href="/submit">
-              Add Your Story
+              {h.addStory}
             </a>
             <a className="btn btn-ghost" href="/wall">
-              Read the Wall of Shame →
+              {h.readWall}
             </a>
           </div>
 
           {/* Stat strip */}
           <div className="stats reveal d4">
-            {HEADLINE_STATS.map((s) => (
+            {HEADLINE_STATS.map((s, i) => (
               <div className="stat" key={s.label}>
                 <div className="num">{s.value}</div>
-                <div className="lab">{s.label}</div>
+                <div className="lab">{h.statLabels[i] ?? s.label}</div>
                 <div className="src">
                   <a href={s.sourceUrl} target="_blank" rel="noopener noreferrer">
                     ◦ {s.source}
@@ -59,7 +64,7 @@ export default async function Home() {
         <div className="wrap">
           <div className="witness">
             <span className="stamp" style={{ position: "absolute", top: -18, right: 24 }}>
-              On Record
+              {h.onRecord}
             </span>
             <blockquote>&ldquo;{WITNESS.quote}&rdquo;</blockquote>
             <div className="by">
@@ -78,16 +83,19 @@ export default async function Home() {
         <div className="wrap">
           <div className="section-head">
             <span className="section-no">01 /</span>
-            <h2>The patterns, named.</h2>
+            <h2>{h.s1}</h2>
           </div>
           <div className="cards">
-            {CATEGORIES.map((c) => (
-              <a className="cat" href={`/submit?category=${c.id}`} key={c.id}>
-                <span className="code">{c.codename}</span>
-                <h3>{c.label}</h3>
-                <p>{c.blurb}</p>
-              </a>
-            ))}
+            {CATEGORIES.map((c) => {
+              const cc = t.categories[c.id];
+              return (
+                <a className="cat" href={`/submit?category=${c.id}`} key={c.id}>
+                  <span className="code">{cc.codename}</span>
+                  <h3>{cc.label}</h3>
+                  <p>{cc.blurb}</p>
+                </a>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -97,13 +105,13 @@ export default async function Home() {
         <div className="wrap">
           <div className="section-head">
             <span className="section-no">02 /</span>
-            <h2>Wall of Shame</h2>
+            <h2>{h.s2}</h2>
             <span className="mono" style={{ marginLeft: "auto", color: "var(--ink-faint)", fontSize: "0.8rem" }}>
-              {stats.approvedCount} ON RECORD · {stats.pendingCount} IN REVIEW
+              {h.wallMeta(stats.approvedCount, stats.pendingCount)}
             </span>
           </div>
           {recent.map((s) => {
-            const cat = CATEGORY_MAP[s.category];
+            const cat = t.categories[s.category] ?? CATEGORY_MAP[s.category];
             return (
               <div className="entry" key={s.id}>
                 <div className="meta">
@@ -123,7 +131,7 @@ export default async function Home() {
           })}
           <div className="btn-row">
             <a className="btn btn-ghost" href="/wall">
-              See all grievances →
+              {h.seeAll}
             </a>
           </div>
         </div>
@@ -134,29 +142,16 @@ export default async function Home() {
         <div className="wrap">
           <div className="section-head">
             <span className="section-no">03 /</span>
-            <h2>Don&rsquo;t just vent. Make it official.</h2>
+            <h2>{h.s3}</h2>
           </div>
           <div className="actions">
-            <a className="action" href="/act#rti">
-              <div className="n">TOOL 01</div>
-              <h3>File an RTI</h3>
-              <p>Demand the data they won&rsquo;t volunteer: Tatkal sellout times, coach-mix changes, action taken on agent bots.</p>
-            </a>
-            <a className="action" href="/act#cpgrams">
-              <div className="n">TOOL 02</div>
-              <h3>Lodge a CPGRAMS / RailMadad complaint</h3>
-              <p>One link to the official grievance portals, with pre-worded text so it takes a minute, not an afternoon.</p>
-            </a>
-            <a className="action" href="/act#mp">
-              <div className="n">TOOL 03</div>
-              <h3>Write to your MP</h3>
-              <p>A ready letter to your constituency representative. Pressure they can&rsquo;t auto-close.</p>
-            </a>
-            <a className="action" href="/act#share">
-              <div className="n">TOOL 04</div>
-              <h3>Share the receipt</h3>
-              <p>Auto-generated card for WhatsApp & X. Every share pulls one more person onto the record.</p>
-            </a>
+            {h.tools.map((tool, i) => (
+              <a className="action" href={["/act#rti", "/act#cpgrams", "/act#mp", "/act#share"][i]} key={tool.n}>
+                <div className="n">{tool.n}</div>
+                <h3>{tool.title}</h3>
+                <p>{tool.desc}</p>
+              </a>
+            ))}
           </div>
         </div>
       </section>

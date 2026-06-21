@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Oswald, Newsreader, DM_Mono } from "next/font/google";
 import "./globals.css";
+import { getLocale, getDict, type Locale } from "@/lib/i18n";
+import LangToggle from "./lang-toggle";
 
 const oswald = Oswald({
   subsets: ["latin"],
@@ -44,7 +46,8 @@ export const metadata: Metadata = {
   },
 };
 
-function Masthead() {
+async function Masthead() {
+  const [locale, t] = await Promise.all([getLocale(), getDict()]);
   return (
     <header className="masthead">
       <div className="masthead-row">
@@ -52,40 +55,38 @@ function Masthead() {
           WAITLISTED <span className="pnr">PNR&nbsp;: WL/RAC</span>
         </a>
         <nav className="nav">
-          <a href="/wall">Wall of Shame</a>
-          <a href="/data">The Data</a>
-          <a href="/act">Take Action</a>
-          <a href="/submit">Add Your Story</a>
+          <a href="/wall">{t.nav.wall}</a>
+          <a href="/data">{t.nav.data}</a>
+          <a href="/act">{t.nav.act}</a>
+          <a href="/submit">{t.nav.submit}</a>
+          <LangToggle locale={locale} otherLabel={t.toggle.other} />
         </nav>
       </div>
     </header>
   );
 }
 
-function Footer() {
+async function Footer() {
+  const t = await getDict();
   return (
     <footer className="foot">
       <div className="wrap">
         <div className="rule" style={{ marginBottom: 24 }} />
-        <p className="disclaimer">
-          WAITLISTED is an independent citizens&rsquo; record and satire project. It is{" "}
-          <b>not affiliated with IRCTC, Indian Railways, or any government body</b>, and does
-          not interact with, access, or interfere with any railway booking system. All
-          grievances are user-submitted, moderated, and published in aggregate &mdash; we do
-          not name or accuse individuals. Statistics are drawn from public sources (PRS India,
-          NITI Aayog and press reports), linked throughout. This is protected expression and
-          civic advocacy: our only tools are the truth, your stories, and the official
-          channels &mdash; RTI, CPGRAMS and RailMadad. &copy; {new Date().getFullYear()}{" "}
-          WAITLISTED.
-        </p>
+        <p
+          className="disclaimer"
+          dangerouslySetInnerHTML={{
+            __html: t.footerHtml.replace("{year}", String(new Date().getFullYear())),
+          }}
+        />
       </div>
     </footer>
   );
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const locale: Locale = await getLocale();
   return (
-    <html lang="en">
+    <html lang={locale}>
       <body className={`${oswald.variable} ${newsreader.variable} ${dmMono.variable}`}>
         <Masthead />
         {children}

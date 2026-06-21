@@ -1,5 +1,6 @@
 import { getApprovedSubmissions, getStats } from "@/lib/store";
 import { CATEGORY_MAP } from "@/lib/data";
+import { getDict } from "@/lib/i18n";
 
 export const dynamic = "force-dynamic";
 
@@ -8,23 +9,26 @@ export const metadata = {
 };
 
 export default async function Wall() {
-  const [items, stats] = await Promise.all([getApprovedSubmissions(), getStats()]);
+  const [items, stats, t] = await Promise.all([
+    getApprovedSubmissions(),
+    getStats(),
+    getDict(),
+  ]);
 
   return (
     <main>
       <section className="page-intro">
         <div className="wrap">
-          <div className="kicker">02 / The public record</div>
-          <h1>Wall of Shame</h1>
-          <p>
-            Every entry is submitted by a traveller and reviewed before it appears. We publish
-            the story, never the person who caused it &mdash; this is a record of a broken
-            system, not a list of accusations.{" "}
-            <b>{stats.approvedCount}</b> on record · <b>{stats.pendingCount}</b> in review.
-          </p>
+          <div className="kicker">{t.wall.kicker}</div>
+          <h1>{t.wall.title}</h1>
+          <p
+            dangerouslySetInnerHTML={{
+              __html: t.wall.bodyHtml(stats.approvedCount, stats.pendingCount),
+            }}
+          />
           <div className="btn-row">
             <a className="btn btn-stamp" href="/submit">
-              Add Your Story
+              {t.nav.submit}
             </a>
           </div>
         </div>
@@ -39,7 +43,7 @@ export default async function Wall() {
             </p>
           )}
           {items.map((s) => {
-            const cat = CATEGORY_MAP[s.category];
+            const cat = t.categories[s.category] ?? CATEGORY_MAP[s.category];
             return (
               <div className="entry" key={s.id}>
                 <div className="meta">

@@ -1,4 +1,5 @@
 import { getDashboardData } from "@/lib/store";
+import { getDict } from "@/lib/i18n";
 
 export const dynamic = "force-dynamic";
 
@@ -21,7 +22,9 @@ function monthLabel(ym: string): string {
 }
 
 export default async function DataPage() {
-  const data = await getDashboardData();
+  const [data, dict] = await Promise.all([getDashboardData(), getDict()]);
+  const t = dict.data;
+  const cats = dict.categories;
 
   const catMax = Math.max(1, ...data.byCategory.map((c) => c.count));
   const cityMax = Math.max(1, ...data.byCity.map((c) => c.count));
@@ -32,19 +35,15 @@ export default async function DataPage() {
     <main>
       <section className="page-intro">
         <div className="wrap">
-          <div className="kicker">03 / The data</div>
-          <h1>Patterns in the record</h1>
-          <p>
-            Aggregated from approved submissions — the shape of what travellers report, never
-            who reported it. The record is young, so early numbers are small and honest; they
-            grow with every story put on the wall.
-          </p>
+          <div className="kicker">{t.kicker}</div>
+          <h1>{t.title}</h1>
+          <p>{t.body}</p>
           <div className="btn-row">
             <a className="btn btn-stamp" href="/submit">
-              Add Your Story
+              {dict.nav.submit}
             </a>
             <a className="btn btn-ghost" href="/wall">
-              See the Wall
+              {t.seeWall}
             </a>
           </div>
         </div>
@@ -56,23 +55,23 @@ export default async function DataPage() {
           <div className="stats">
             <div className="stat">
               <div className="num">{data.total}</div>
-              <div className="lab">Grievances on record</div>
-              <div className="src">Approved · public</div>
+              <div className="lab">{t.statTotal}</div>
+              <div className="src">{t.statTotalSrc}</div>
             </div>
             <div className="stat">
               <div className="num">{evidencePct}%</div>
-              <div className="lab">Backed by evidence on file</div>
-              <div className="src">{data.withEvidence} of {data.total}</div>
+              <div className="lab">{t.statEvidence}</div>
+              <div className="src">{t.statEvidenceSrc(data.withEvidence, data.total)}</div>
             </div>
             <div className="stat">
               <div className="num">{data.pledgeCount}</div>
-              <div className="lab">No-booking pledges signed</div>
-              <div className="src">Voluntary · public</div>
+              <div className="lab">{t.statPledge}</div>
+              <div className="src">{t.statPledgeSrc}</div>
             </div>
             <div className="stat">
               <div className="num">{data.byCity.length}</div>
-              <div className="lab">Cities represented</div>
-              <div className="src">Top 8 shown below</div>
+              <div className="lab">{t.statCities}</div>
+              <div className="src">{t.statCitiesSrc}</div>
             </div>
           </div>
           <div className="rule" />
@@ -84,12 +83,12 @@ export default async function DataPage() {
         <div className="wrap">
           <div className="section-head">
             <span className="section-no">A</span>
-            <h2>By complaint type</h2>
+            <h2>{t.secType}</h2>
           </div>
           <div className="chart">
             {data.byCategory.map((c) => (
               <div className="bar-row" key={c.id}>
-                <div className="bar-label">{c.label}</div>
+                <div className="bar-label">{cats[c.id]?.label ?? c.label}</div>
                 <div className="bar-track">
                   <div className="bar-fill" style={{ width: `${pct(c.count, catMax)}%` }} />
                 </div>
@@ -105,10 +104,10 @@ export default async function DataPage() {
         <div className="wrap">
           <div className="section-head">
             <span className="section-no">B</span>
-            <h2>Where it&rsquo;s happening</h2>
+            <h2>{t.secWhere}</h2>
           </div>
           {data.byCity.length === 0 ? (
-            <p className="chart-empty">No cities on record yet.</p>
+            <p className="chart-empty">{t.noCities}</p>
           ) : (
             <div className="chart">
               {data.byCity.map((c) => (
@@ -130,10 +129,10 @@ export default async function DataPage() {
         <div className="wrap">
           <div className="section-head">
             <span className="section-no">C</span>
-            <h2>On the record over time</h2>
+            <h2>{t.secTime}</h2>
           </div>
           {data.byMonth.length === 0 ? (
-            <p className="chart-empty">No dated entries yet.</p>
+            <p className="chart-empty">{t.noDated}</p>
           ) : (
             <div className="chart-months">
               {data.byMonth.map((m) => (
@@ -146,8 +145,7 @@ export default async function DataPage() {
             </div>
           )}
           <p className="chart-empty" style={{ marginTop: 22, maxWidth: 640, lineHeight: 1.7 }}>
-            Note: Tatkal sellout-time heatmaps need booking-window data we don&rsquo;t collect or
-            scrape. This dashboard reports only what travellers put on the record — by design.
+            {t.note}
           </p>
         </div>
       </section>

@@ -115,6 +115,20 @@ a { color: inherit; }
   color: var(--ink-soft);
 }
 .nav a:hover { color: var(--stamp); }
+.lang-toggle {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: transparent;
+  border: 2px solid var(--ink);
+  border-radius: var(--radius);
+  padding: 3px 9px;
+  cursor: pointer;
+  line-height: 1.4;
+}
+.lang-toggle:hover { color: var(--paper); background: var(--stamp); border-color: var(--stamp); }
 
 /* ── The rubber stamp ─────────────────────────────────────────────────────── */
 .stamp {

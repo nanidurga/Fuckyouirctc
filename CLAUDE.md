@@ -107,6 +107,22 @@ reject; approved rows appear on `/wall`). `ADMIN_PASSWORD` gates `/admin` (in `.
   them into the `/api/og` function. `metadataBase` (`NEXT_PUBLIC_SITE_URL`, set it in Vercel) makes
   the card URL absolute for unfurls.
 
+**Data dashboard (done):** `/data` — `getDashboardData()` in `lib/store.ts` aggregates APPROVED
+submissions only (by type / top-8 cities / last-12 months, + evidence %); rendered as dot-matrix
+brutalist charts. Aggregate-only, defamation-safe by construction.
+
+**i18n (first pass, EN/HI, cookie toggle):** no URL change — a masthead toggle sets the `wl_lang`
+cookie and reloads; server components read it via `getDict()`.
+- `lib/i18n.ts` — dictionaries (en/hi) + `getLocale()`/`getDict()`. **Server-only** (imports
+  `next/headers`).
+- `lib/i18n-shared.ts` — `Locale`, `LANG_COOKIE` (server-free; safe for client import).
+- `app/lang-toggle.tsx` — client toggle. Reading the cookie in the root layout makes most pages
+  dynamic (ƒ); `/opengraph-image` stays static (separate route, no layout).
+- Translated: chrome, homepage, `/wall`, `/data`. Not yet: `/act`, `/submit`. Sourced/attributed
+  content (witness quote, stat source names) is intentionally **not** re-translated.
+- To add a string: add it to the `Dict` type + both `en`/`hi` in `lib/i18n.ts`. To add a language:
+  extend `Locale` + `LOCALES` and add a dictionary.
+
 ## Deployment (Vercel)
 
 - `.env.local` is gitignored, so it does **not** reach Vercel. The env vars
@@ -131,8 +147,12 @@ reject; approved rows appear on `/wall`). `ADMIN_PASSWORD` gates `/admin` (in `.
    Candidate approach: LLM/classifier screen in `createSubmission` →
    reject obvious violations · publish clearly-safe · queue the rest.
 2. ~~Auto-generated branded share cards (OG images)~~ — **done** (see Status).
-3. Public data dashboards (Tatkal sellout-time heatmaps).
-4. Hindi (then regional) language versions.
+3. ~~Public data dashboards~~ — **done** as `/data` (aggregate grievance patterns; the
+   honest version — true Tatkal sellout-time heatmaps need booking data we don't collect).
+4. **Hindi language versions** — **first pass done** (cookie toggle, no URL change). Chrome
+   (masthead/footer), homepage, `/wall`, and `/data` are translated. **Still English:**
+   `/act` (incl. RTI template) and `/submit` (form + page intro) — translate next, then add
+   regional languages. See "i18n" below.
 5. Evidence upload (Supabase Storage). *(Rate-limiting on submit/pledge is done —
    `lib/rate-limit.ts`.)*
 
