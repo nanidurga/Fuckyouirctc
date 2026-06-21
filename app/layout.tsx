@@ -24,7 +24,7 @@ const dmMono = DM_Mono({
 // metadataBase lets Next resolve the auto-generated opengraph-image to an
 // absolute URL (required for link unfurls). Set NEXT_PUBLIC_SITE_URL in Vercel
 // to the production domain; falls back to the default Vercel URL otherwise.
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://waitlisted.vercel.app";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://fuckyouirctc.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

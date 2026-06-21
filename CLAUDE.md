@@ -141,6 +141,9 @@ against the live bucket (upload → row link → signed-URL view → cleanup).
 
 ## Deployment (Vercel)
 
+- **Live:** https://fuckyouirctc.vercel.app — `NEXT_PUBLIC_SITE_URL` is set to this on Vercel
+  (confirmed: `og:image` resolves to this domain). Code fallback now also points here.
+
 - `.env.local` is gitignored, so it does **not** reach Vercel. The env vars
   (`SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `ADMIN_PASSWORD`, and
   `NEXT_PUBLIC_SITE_URL` = the production domain, for absolute OG-card URLs) must be set in

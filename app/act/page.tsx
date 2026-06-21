@@ -10,7 +10,7 @@ export default async function Act() {
 
   // A share only unfurls an OG card if the shared TEXT contains a URL pointing at
   // the live site. Set NEXT_PUBLIC_SITE_URL in Vercel to the production domain.
-  const site = process.env.NEXT_PUBLIC_SITE_URL || "https://waitlisted.vercel.app";
+  const site = process.env.NEXT_PUBLIC_SITE_URL || "https://fuckyouirctc.vercel.app";
   const waHref = `https://wa.me/?text=${encodeURIComponent(`${a.share.shareMsg} ${site}`)}`;
   const xHref = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
     `${a.share.shareMsg} ${a.share.shareTags}`,
