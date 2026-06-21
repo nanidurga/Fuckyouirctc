@@ -18,6 +18,8 @@ type FormStrings = {
   amountPh: string;
   cityOpt: string;
   cityPh: string;
+  evidenceUpload: string;
+  evidenceHint: string;
   evidenceLabel: string;
   truthNote: string;
   fileBtn: string;
@@ -45,23 +47,14 @@ export default function SubmitForm({ t, cats }: { t: FormStrings; cats: Cat[] })
     e.preventDefault();
     setState({ kind: "sending" });
     const form = e.currentTarget;
+    // Send the form as multipart/form-data so the optional evidence file rides
+    // along. Don't set Content-Type — the browser adds the multipart boundary.
     const fd = new FormData(form);
-    const payload = {
-      category: fd.get("category"),
-      title: fd.get("title"),
-      story: fd.get("story"),
-      route: fd.get("route"),
-      trainNo: fd.get("trainNo"),
-      amount: fd.get("amount"),
-      city: fd.get("city"),
-      hasEvidence: fd.get("hasEvidence") === "on",
-    };
 
     try {
       const res = await fetch("/api/submissions", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: fd,
       });
       const data = await res.json();
       if (!res.ok) {
@@ -134,6 +127,19 @@ export default function SubmitForm({ t, cats }: { t: FormStrings; cats: Cat[] })
           <label htmlFor="city">{t.cityOpt}</label>
           <input id="city" name="city" maxLength={60} placeholder={t.cityPh} />
         </div>
+      </div>
+
+      <div className="field">
+        <label htmlFor="evidence">{t.evidenceUpload}</label>
+        <input
+          id="evidence"
+          name="evidence"
+          type="file"
+          accept="image/jpeg,image/png,image/webp,image/gif,application/pdf"
+        />
+        <p className="mono" style={{ fontSize: "0.7rem", color: "var(--ink-faint)", marginTop: 7 }}>
+          {t.evidenceHint}
+        </p>
       </div>
 
       <div className="field">

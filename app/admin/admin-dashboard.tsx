@@ -34,6 +34,21 @@ export default function AdminDashboard({ items }: { items: Submission[] }) {
     }
   }
 
+  async function viewEvidence(path: string) {
+    setErr(null);
+    try {
+      const res = await fetch(`/api/admin/evidence?path=${encodeURIComponent(path)}`);
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.url) {
+        setErr(data.error || "Could not load evidence.");
+        return;
+      }
+      window.open(data.url, "_blank", "noopener,noreferrer");
+    } catch {
+      setErr("Network error.");
+    }
+  }
+
   async function logout() {
     await fetch("/api/admin/logout", { method: "POST" });
     router.refresh();
@@ -76,8 +91,21 @@ export default function AdminDashboard({ items }: { items: Submission[] }) {
             <div>
               <h4>{s.title}</h4>
               <p className="story">{s.story}</p>
-              {s.hasEvidence && <span className="verified">✓ Evidence on file</span>}
+              {s.hasEvidence && (
+                <span className="verified">
+                  ✓ Evidence {s.evidencePath ? "uploaded" : "on file (on request)"}
+                </span>
+              )}
               <div className="btn-row" style={{ marginTop: 16 }}>
+                {s.evidencePath && (
+                  <button
+                    className="btn btn-ghost"
+                    onClick={() => viewEvidence(s.evidencePath!)}
+                    disabled={working}
+                  >
+                    View evidence →
+                  </button>
+                )}
                 <button
                   className="btn"
                   style={{ background: "var(--signal)", borderColor: "var(--signal)" }}

@@ -126,6 +126,19 @@ cookie and reloads; server components read it via `getDict()`.
 - To add a string: add it to the `Dict` type + both `en`/`hi` in `lib/i18n.ts`. To add a language:
   extend `Locale` (in `lib/i18n-shared.ts`) and add a dictionary in `lib/i18n.ts`.
 
+**Evidence upload (done):** optional file on `/submit`, stored in a **private** Supabase Storage
+bucket — evidence often contains PII, so it is never public (defamation-safe). Verified end-to-end
+against the live bucket (upload → row link → signed-URL view → cleanup).
+- Bucket `evidence` (`public=false`, 5 MB + MIME caps at the storage layer). DDL in
+  `supabase/schema.sql`; `submissions.evidence_path` column added.
+- `lib/evidence.ts` (server-only) — `validateEvidence`, `uploadEvidence` (→ `<id>/evidence.<ext>`),
+  `signedEvidenceUrl`. All access is service-role/server-side.
+- `/submit` posts **multipart/form-data** now (was JSON); `app/api/submissions/route.ts` validates
+  the file *before* creating the row, uploads after (a failed upload never loses the grievance),
+  and sets `has_evidence`. `lib/store.ts` `attachEvidence()` links the path.
+- Wall shows only a badge; a moderator views the file via `app/api/admin/evidence/route.ts`
+  (auth-gated, 120 s signed URL) — "View evidence" button in `admin-dashboard.tsx`.
+
 ## Deployment (Vercel)
 
 - `.env.local` is gitignored, so it does **not** reach Vercel. The env vars
@@ -155,8 +168,11 @@ cookie and reloads; server components read it via `getDict()`.
 4. ~~Hindi language versions~~ — **done** (EN/HI cookie toggle, no URL change). All pages
    translated: chrome, homepage, `/wall`, `/data`, `/act` (incl. RTI + MP templates), `/submit`.
    Next on this track: regional languages (extend `Locale` + add a dictionary). See "i18n" below.
-5. **Evidence upload (Supabase Storage)** — next up. *(Rate-limiting on submit/pledge is done —
-   `lib/rate-limit.ts`.)*
+5. ~~Evidence upload (Supabase Storage)~~ — **done** (see Status). *(Rate-limiting on
+   submit/pledge is also done — `lib/rate-limit.ts`.)*
+
+With 1–5 shipped, **automated moderation (#1) is the only remaining roadmap item** — and the
+owner has parked it for last.
 
 ## Security
 

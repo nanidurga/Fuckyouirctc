@@ -114,6 +114,8 @@ type Dict = {
     amountPh: string;
     cityOpt: string;
     cityPh: string;
+    evidenceUpload: string;
+    evidenceHint: string;
     evidenceLabel: string;
     truthNote: string;
     fileBtn: string;
@@ -322,6 +324,9 @@ Sincerely,
     amountPh: "₹2,000",
     cityOpt: "City (optional)",
     cityPh: "Pune",
+    evidenceUpload: "Upload evidence (optional)",
+    evidenceHint:
+      "Screenshot, ticket or PNR — JPG, PNG, WebP, GIF or PDF, up to 5 MB. Stored privately and shown only to moderators; never published.",
     evidenceLabel:
       "I have a screenshot / ticket / PNR as evidence and can provide it on request. (Evidence makes your story far harder to dismiss.)",
     truthNote:
@@ -531,6 +536,9 @@ eWallet निकासी प्रक्रिया।
     amountPh: "₹2,000",
     cityOpt: "शहर (वैकल्पिक)",
     cityPh: "पुणे",
+    evidenceUpload: "सबूत अपलोड करें (वैकल्पिक)",
+    evidenceHint:
+      "स्क्रीनशॉट, टिकट या PNR — JPG, PNG, WebP, GIF या PDF, अधिकतम 5 MB। निजी रूप से सहेजा जाता है और केवल मॉडरेटर देखते हैं; कभी प्रकाशित नहीं होता।",
     evidenceLabel:
       "मेरे पास सबूत के तौर पर स्क्रीनशॉट / टिकट / PNR है और माँगे जाने पर दे सकता/सकती हूँ। (सबूत आपकी कहानी को खारिज करना बहुत मुश्किल बना देता है।)",
     truthNote:

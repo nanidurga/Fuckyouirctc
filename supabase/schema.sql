@@ -14,6 +14,7 @@ create table if not exists public.submissions (
   status       text not null default 'pending'
                  check (status in ('pending','approved','rejected')),
   has_evidence boolean not null default false,
+  evidence_path text,   -- path in the PRIVATE `evidence` storage bucket (admin-only)
   created_at   timestamptz not null default now()
 );
 
@@ -42,6 +43,17 @@ create policy "approved are public"
 -- (No anon insert/update policy: submissions and pledges go through the server
 --  with the service role key. Add anon-insert policies only if you move writes
 --  to the browser, and add rate-limiting first.)
+
+-- ── Evidence storage (PRIVATE bucket) ────────────────────────────────────────
+-- Evidence files often contain PII, so the bucket is private (public = false)
+-- and the app reads/writes it only server-side with the service-role key (which
+-- bypasses storage RLS). The public Wall shows a badge, never the file; a
+-- moderator views a file via a short-lived signed URL (/api/admin/evidence).
+-- Size + MIME are also capped at the storage layer (defense in depth).
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values ('evidence', 'evidence', false, 5242880,
+        array['image/jpeg','image/png','image/webp','image/gif','application/pdf'])
+on conflict (id) do nothing;
 
 -- ── DEMO SEED (opt-in) ───────────────────────────────────────────────────────
 -- These are ILLUSTRATIVE sample stories, not real submissions. The public Wall

@@ -24,6 +24,8 @@ export type Submission = {
   status: SubmissionStatus;
   createdAt: string;
   hasEvidence: boolean;
+  // Storage path in the private `evidence` bucket; admin-only via signed URL.
+  evidencePath?: string;
 };
 
 type NewSubmission = Omit<Submission, "id" | "status" | "createdAt">;
@@ -40,6 +42,7 @@ type Row = {
   city: string | null;
   status: string;
   has_evidence: boolean;
+  evidence_path: string | null;
   created_at: string;
 };
 
@@ -56,6 +59,7 @@ function rowToSubmission(r: Row): Submission {
     status: r.status as SubmissionStatus,
     createdAt: r.created_at,
     hasEvidence: r.has_evidence,
+    evidencePath: r.evidence_path ?? undefined,
   };
 }
 
@@ -314,4 +318,22 @@ export async function setSubmissionStatus(
   }
   const { error } = await sb.from("submissions").update({ status }).eq("id", id);
   if (error) throw new Error(`Supabase setSubmissionStatus: ${error.message}`);
+}
+
+// Links an uploaded evidence file to a submission and flips has_evidence true.
+export async function attachEvidence(id: string, path: string): Promise<void> {
+  const sb = getSupabase();
+  if (!sb) {
+    const s = mem.find((x) => x.id === id);
+    if (s) {
+      s.evidencePath = path;
+      s.hasEvidence = true;
+    }
+    return;
+  }
+  const { error } = await sb
+    .from("submissions")
+    .update({ evidence_path: path, has_evidence: true })
+    .eq("id", id);
+  if (error) throw new Error(`Supabase attachEvidence: ${error.message}`);
 }
