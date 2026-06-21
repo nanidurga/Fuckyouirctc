@@ -91,6 +91,8 @@ type Dict = {
       no: string;
       h: string;
       descHtml: string;
+      shareMsg: string;
+      shareTags: string;
       waTag: string;
       waTitle: string;
       waDesc: string;
@@ -294,6 +296,9 @@ Sincerely,
       descHtml:
         "Reach in India runs on WhatsApp and X. Forward the record — every link you share now " +
         "unfurls as a branded WAITLISTED card.",
+      shareMsg:
+        "The network grew 23%. Passengers grew 1,344%. That's why Tatkal sells out in 8 seconds. Put your story on the record:",
+      shareTags: "#TatkalRoulette #WAITLISTED",
       waTag: "WHATSAPP",
       waTitle: "Forward on WhatsApp →",
       waDesc: "The distribution layer of India. One forward = one more person on the record.",
@@ -506,6 +511,9 @@ eWallet निकासी प्रक्रिया।
       descHtml:
         "भारत में पहुँच WhatsApp और X पर चलती है। रिकॉर्ड को आगे भेजें — अब आप जो भी लिंक शेयर " +
         "करते हैं वह एक ब्रांडेड WAITLISTED कार्ड के रूप में खुलता है।",
+      shareMsg:
+        "रेल नेटवर्क 23% बढ़ा। यात्री 1,344% बढ़े। इसीलिए तत्काल 8 सेकंड में बिक जाता है। अपनी कहानी रिकॉर्ड पर लाइए:",
+      shareTags: "#TatkalRoulette #WAITLISTED",
       waTag: "WHATSAPP",
       waTitle: "WhatsApp पर फॉरवर्ड करें →",
       waDesc: "भारत की वितरण परत। एक फॉरवर्ड = एक और व्यक्ति रिकॉर्ड पर।",

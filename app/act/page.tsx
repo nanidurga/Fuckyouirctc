@@ -7,6 +7,15 @@ export const metadata = {
 export default async function Act() {
   const t = await getDict();
   const a = t.act;
+
+  // A share only unfurls an OG card if the shared TEXT contains a URL pointing at
+  // the live site. Set NEXT_PUBLIC_SITE_URL in Vercel to the production domain.
+  const site = process.env.NEXT_PUBLIC_SITE_URL || "https://waitlisted.vercel.app";
+  const waHref = `https://wa.me/?text=${encodeURIComponent(`${a.share.shareMsg} ${site}`)}`;
+  const xHref = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+    `${a.share.shareMsg} ${a.share.shareTags}`,
+  )}&url=${encodeURIComponent(site)}`;
+
   return (
     <main>
       <section className="page-intro">
@@ -88,22 +97,12 @@ export default async function Act() {
           </div>
           <p style={{ maxWidth: 720 }} dangerouslySetInnerHTML={{ __html: a.share.descHtml }} />
           <div className="actions">
-            <a
-              className="action"
-              href="https://wa.me/?text=The%20network%20grew%2023%25.%20Passengers%20grew%201%2C344%25.%20That's%20why%20Tatkal%20sells%20out%20in%208%20seconds.%20Put%20your%20story%20on%20the%20record%3A%20"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a className="action" href={waHref} target="_blank" rel="noopener noreferrer">
               <div className="n">{a.share.waTag}</div>
               <h3>{a.share.waTitle}</h3>
               <p>{a.share.waDesc}</p>
             </a>
-            <a
-              className="action"
-              href="https://twitter.com/intent/tweet?text=The%20network%20grew%2023%25.%20Passengers%20grew%201%2C344%25.%20%23TatkalRoulette%20%23WAITLISTED"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a className="action" href={xHref} target="_blank" rel="noopener noreferrer">
               <div className="n">{a.share.xTag}</div>
               <h3>{a.share.xTitle}</h3>
               <p>{a.share.xDesc}</p>
