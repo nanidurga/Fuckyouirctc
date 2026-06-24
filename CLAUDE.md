@@ -107,6 +107,23 @@ reject; approved rows appear on `/wall`). `ADMIN_PASSWORD` gates `/admin` (in `.
   them into the `/api/og` function. `metadataBase` (`NEXT_PUBLIC_SITE_URL`, set it in Vercel) makes
   the card URL absolute for unfurls.
 
+**Story share flow (done):** one-tap sharing to three destinations — built for the way reach
+actually spreads in India (WhatsApp / Instagram stories / X). Verified end-to-end on a dev server
+(valid 1080×1920 PNG renders; `/act` serves the sheet).
+- `lib/og-card.tsx` `renderStoryCard()` — a **vertical 1080×1920 (9:16)** variant of the OG card for
+  Instagram / WhatsApp *stories*. Stories are images, not links, so nothing is clickable — the card
+  prints the **domain in big signal-green type** at the foot so a viewer can find the site.
+- `app/api/og/story/route.tsx` — dynamic per-grievance story card (`?title=&cat=&meta=&stamp=`),
+  public/approved fields only. `next.config.mjs` `outputFileTracingIncludes` bundles the brand TTFs
+  into this function too (same as `/api/og`).
+- `app/share-sheet.tsx` (client) — three `.action` cards: **Post to Story** fetches the PNG and opens
+  the phone's native share sheet via the **Web Share API Level 2** (`navigator.share({ files })`) →
+  user picks IG/WhatsApp story; desktop (no file-share) falls back to a **download**. AbortError
+  (user dismissing the sheet) is treated as a no-op, not an error. The other two cards are the
+  existing **WhatsApp** (text+link) and **X** (text+tags+link) intents.
+- Wired into `/act` `#share`. Strings live in the `act.share.*` i18n dict (EN/HI), passed as plain
+  props. Reusable for per-grievance sharing on `/wall` later (pass `storyImg` with query params).
+
 **Data dashboard (done):** `/data` — `getDashboardData()` in `lib/store.ts` aggregates APPROVED
 submissions only (by type / top-8 cities / last-12 months, + evidence %); rendered as dot-matrix
 brutalist charts. Aggregate-only, defamation-safe by construction.

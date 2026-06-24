@@ -226,3 +226,197 @@ export async function renderOgCard(opts: OgCardOpts): Promise<ImageResponse> {
     },
   );
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// STORY CARD — the same reservation-chart brutalism, but a vertical 1080×1920
+// (9:16) image built for Instagram / WhatsApp *stories*. Stories are images, not
+// links: nothing here is clickable, so the domain is printed in big type at the
+// bottom so a viewer can find the site. Used by `app/api/og/story/route.tsx`.
+// ─────────────────────────────────────────────────────────────────────────────
+
+const STORY_SIZE = { width: 1080, height: 1920 };
+
+export type StoryCardOpts = OgCardOpts & {
+  /** Big domain printed at the foot of the card (stories aren't clickable). */
+  site?: string;
+};
+
+export async function renderStoryCard(opts: StoryCardOpts): Promise<ImageResponse> {
+  const { oswald, mono } = await loadFonts();
+
+  const title = opts.title.length > 110 ? `${opts.title.slice(0, 107)}…` : opts.title;
+  const kicker = (opts.kicker ?? "The citizens' record").toUpperCase();
+  const stamp = (opts.stamp ?? "On the record").toUpperCase();
+  const site = (opts.site ?? "fuckyouirctc.vercel.app").replace(/^https?:\/\//, "");
+
+  return new ImageResponse(
+    (
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          backgroundColor: C.paper,
+          color: C.ink,
+          fontFamily: "DM Mono",
+          position: "relative",
+          padding: 84,
+        }}
+      >
+        {/* Inset ink frame */}
+        <div
+          style={{
+            position: "absolute",
+            top: 40,
+            left: 40,
+            right: 40,
+            bottom: 40,
+            border: `3px solid ${C.ink}`,
+          }}
+        />
+
+        {/* Giant corner watermark */}
+        <div
+          style={{
+            position: "absolute",
+            right: 40,
+            bottom: 40,
+            fontFamily: "Oswald",
+            fontSize: 520,
+            color: C.paper2,
+            letterSpacing: -8,
+            transform: "rotate(-8deg)",
+          }}
+        >
+          WL
+        </div>
+
+        {/* Header */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+            zIndex: 1,
+          }}
+        >
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <div
+              style={{
+                fontFamily: "Oswald",
+                fontSize: 92,
+                lineHeight: 1,
+                letterSpacing: 3,
+                color: C.ink,
+              }}
+            >
+              WAITLISTED
+            </div>
+            <div style={{ fontSize: 26, marginTop: 16, letterSpacing: 1, color: C.inkFaint }}>
+              PNR : WL/RAC · INDIAN RAILWAYS
+            </div>
+          </div>
+
+          {/* Rubber stamp */}
+          <div
+            style={{
+              display: "flex",
+              border: `4px solid ${C.stamp}`,
+              color: C.stamp,
+              fontFamily: "Oswald",
+              fontSize: 34,
+              letterSpacing: 3,
+              padding: "10px 22px",
+              transform: "rotate(-7deg)",
+              opacity: 0.92,
+              textAlign: "center",
+              maxWidth: 360,
+              lineHeight: 1.1,
+            }}
+          >
+            {stamp}
+          </div>
+        </div>
+
+        {/* Perforated divider */}
+        <div style={{ display: "flex", gap: 10, marginTop: 48, marginBottom: 48, zIndex: 1 }}>
+          {Array.from({ length: 40 }).map((_, i) => (
+            <div
+              key={i}
+              style={{ width: 9, height: 9, borderRadius: 9, backgroundColor: C.lineStrong }}
+            />
+          ))}
+        </div>
+
+        {/* Body */}
+        <div style={{ display: "flex", flexDirection: "column", flexGrow: 1, zIndex: 1 }}>
+          <div style={{ fontSize: 30, letterSpacing: 4, color: C.stamp }}>{kicker}</div>
+          <div
+            style={{
+              display: "flex",
+              fontFamily: "Oswald",
+              fontSize: 96,
+              lineHeight: 1.06,
+              color: C.ink,
+              marginTop: 28,
+            }}
+          >
+            {title}
+          </div>
+          {opts.meta ? (
+            <div style={{ fontSize: 30, color: C.inkSoft, marginTop: 36, letterSpacing: 1 }}>
+              {opts.meta}
+            </div>
+          ) : null}
+
+          {/* Pull stat */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              marginTop: 64,
+              borderTop: `3px solid ${C.ink}`,
+              borderBottom: `3px solid ${C.ink}`,
+              paddingTop: 36,
+              paddingBottom: 36,
+            }}
+          >
+            <div style={{ display: "flex", fontFamily: "Oswald", fontSize: 116, color: C.stamp, lineHeight: 1 }}>
+              8 SECONDS
+            </div>
+            <div style={{ fontSize: 30, color: C.inkSoft, marginTop: 18, letterSpacing: 1 }}>
+              to Tatkal sellout. Network +23%. Passengers +1,344%.
+            </div>
+          </div>
+        </div>
+
+        {/* Footer — the call to action + the (unclickable) domain in big type */}
+        <div style={{ display: "flex", flexDirection: "column", zIndex: 1 }}>
+          <div style={{ fontSize: 32, color: C.inkSoft, letterSpacing: 1 }}>
+            Add your story → put it on the record at
+          </div>
+          <div
+            style={{
+              display: "flex",
+              fontFamily: "Oswald",
+              fontSize: 72,
+              color: C.signal,
+              marginTop: 12,
+              letterSpacing: 1,
+            }}
+          >
+            {site}
+          </div>
+        </div>
+      </div>
+    ),
+    {
+      ...STORY_SIZE,
+      fonts: [
+        { name: "Oswald", data: oswald, weight: 700, style: "normal" },
+        { name: "DM Mono", data: mono, weight: 500, style: "normal" },
+      ],
+    },
+  );
+}

@@ -1,4 +1,5 @@
 import { getDict } from "@/lib/i18n";
+import ShareSheet from "@/app/share-sheet";
 
 export const metadata = {
   title: "Take Action — WAITLISTED",
@@ -15,6 +16,8 @@ export default async function Act() {
   const xHref = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
     `${a.share.shareMsg} ${a.share.shareTags}`,
   )}&url=${encodeURIComponent(site)}`;
+  // Generic (non-grievance) vertical story card for the toolkit's share section.
+  const storyImg = `${site}/api/og/story`;
 
   return (
     <main>
@@ -96,18 +99,26 @@ export default async function Act() {
             <h2>{a.share.h}</h2>
           </div>
           <p style={{ maxWidth: 720 }} dangerouslySetInnerHTML={{ __html: a.share.descHtml }} />
-          <div className="actions">
-            <a className="action" href={waHref} target="_blank" rel="noopener noreferrer">
-              <div className="n">{a.share.waTag}</div>
-              <h3>{a.share.waTitle}</h3>
-              <p>{a.share.waDesc}</p>
-            </a>
-            <a className="action" href={xHref} target="_blank" rel="noopener noreferrer">
-              <div className="n">{a.share.xTag}</div>
-              <h3>{a.share.xTitle}</h3>
-              <p>{a.share.xDesc}</p>
-            </a>
-          </div>
+          <ShareSheet
+            storyImg={storyImg}
+            shareText={`${a.share.shareMsg} ${site}`}
+            waHref={waHref}
+            xHref={xHref}
+            labels={{
+              storyTag: a.share.storyTag,
+              storyTitle: a.share.storyTitle,
+              storyDesc: a.share.storyDesc,
+              storyBusy: a.share.storyBusy,
+              storyDone: a.share.storyDone,
+              storyErr: a.share.storyErr,
+              waTag: a.share.waTag,
+              waTitle: a.share.waTitle,
+              waDesc: a.share.waDesc,
+              xTag: a.share.xTag,
+              xTitle: a.share.xTitle,
+              xDesc: a.share.xDesc,
+            }}
+          />
         </div>
       </section>
     </main>

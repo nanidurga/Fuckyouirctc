@@ -93,6 +93,12 @@ type Dict = {
       descHtml: string;
       shareMsg: string;
       shareTags: string;
+      storyTag: string;
+      storyTitle: string;
+      storyDesc: string;
+      storyBusy: string;
+      storyDone: string;
+      storyErr: string;
       waTag: string;
       waTitle: string;
       waDesc: string;
@@ -294,11 +300,17 @@ Sincerely,
       no: "TOOL 04 /",
       h: "Share the receipt",
       descHtml:
-        "Reach in India runs on WhatsApp and X. Forward the record — every link you share now " +
-        "unfurls as a branded WAITLISTED card.",
+        "Reach in India runs on WhatsApp, Instagram and X. Tap once — post a ready-made story " +
+        "card, or forward a link that unfurls as a branded WAITLISTED card.",
       shareMsg:
         "The network grew 23%. Passengers grew 1,344%. That's why Tatkal sells out in 8 seconds. Put your story on the record:",
       shareTags: "#TatkalRoulette #WAITLISTED",
+      storyTag: "INSTAGRAM / WHATSAPP STORY",
+      storyTitle: "Post a story card →",
+      storyDesc: "Tap to drop a ready-made WAITLISTED card into your Instagram or WhatsApp story.",
+      storyBusy: "Preparing your card…",
+      storyDone: "Card downloaded — add it to your story.",
+      storyErr: "Couldn't prepare the card. Tap to try again.",
       waTag: "WHATSAPP",
       waTitle: "Forward on WhatsApp →",
       waDesc: "The distribution layer of India. One forward = one more person on the record.",
@@ -509,11 +521,17 @@ eWallet निकासी प्रक्रिया।
       no: "टूल 04 /",
       h: "रसीद शेयर करें",
       descHtml:
-        "भारत में पहुँच WhatsApp और X पर चलती है। रिकॉर्ड को आगे भेजें — अब आप जो भी लिंक शेयर " +
-        "करते हैं वह एक ब्रांडेड WAITLISTED कार्ड के रूप में खुलता है।",
+        "भारत में पहुँच WhatsApp, Instagram और X पर चलती है। एक टैप करें — तैयार स्टोरी कार्ड पोस्ट " +
+        "करें, या ऐसा लिंक भेजें जो ब्रांडेड WAITLISTED कार्ड के रूप में खुलता है।",
       shareMsg:
         "रेल नेटवर्क 23% बढ़ा। यात्री 1,344% बढ़े। इसीलिए तत्काल 8 सेकंड में बिक जाता है। अपनी कहानी रिकॉर्ड पर लाइए:",
       shareTags: "#TatkalRoulette #WAITLISTED",
+      storyTag: "INSTAGRAM / WHATSAPP स्टोरी",
+      storyTitle: "स्टोरी कार्ड पोस्ट करें →",
+      storyDesc: "अपनी Instagram या WhatsApp स्टोरी में तैयार WAITLISTED कार्ड डालने के लिए टैप करें।",
+      storyBusy: "आपका कार्ड तैयार हो रहा है…",
+      storyDone: "कार्ड डाउनलोड हो गया — इसे अपनी स्टोरी में जोड़ें।",
+      storyErr: "कार्ड तैयार नहीं हो सका। दोबारा कोशिश के लिए टैप करें।",
       waTag: "WHATSAPP",
       waTitle: "WhatsApp पर फॉरवर्ड करें →",
       waDesc: "भारत की वितरण परत। एक फॉरवर्ड = एक और व्यक्ति रिकॉर्ड पर।",

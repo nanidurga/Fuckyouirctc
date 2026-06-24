@@ -6,6 +6,7 @@ const nextConfig = {
   // tracing won't pick up a runtime fs.readFile path on its own.
   outputFileTracingIncludes: {
     "/api/og": ["./lib/og-fonts/**"],
+    "/api/og/story": ["./lib/og-fonts/**"],
   },
 };
 
