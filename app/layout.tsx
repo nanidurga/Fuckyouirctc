@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Oswald, Newsreader, DM_Mono } from "next/font/google";
 import "./globals.css";
 import { getLocale, getDict, type Locale } from "@/lib/i18n";
@@ -25,6 +25,16 @@ const dmMono = DM_Mono({
 // absolute URL (required for link unfurls). Set NEXT_PUBLIC_SITE_URL in Vercel
 // to the production domain; falls back to the default Vercel URL otherwise.
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://fuckyouirctc.vercel.app";
+
+// Explicit viewport so phones render at device width (no forced desktop zoom).
+// `viewportFit: cover` lets the cream paper bleed into notch/safe-area insets;
+// no maximumScale, so pinch-zoom stays available (accessibility).
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#efe7d6",
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

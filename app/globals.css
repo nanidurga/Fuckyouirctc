@@ -27,7 +27,18 @@
 
 * { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  /* Stop iOS Safari/Chrome from auto-inflating text in landscape. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* Safety net: rotated/offset decorative elements (stamps, witness card,
+     ticket notches, struck-through headline) must never spawn a horizontal
+     scrollbar on small screens. `clip` doesn't break the sticky masthead;
+     `hidden` is the fallback for older browsers. */
+  overflow-x: hidden;
+  overflow-x: clip;
+}
 
 body {
   margin: 0;
@@ -42,7 +53,26 @@ body {
   font-size: 18px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Long unbroken strings (URLs, IDs, hashtags) wrap instead of overflowing. */
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
+
+/* Visible keyboard-focus ring across browsers (inputs handle their own below).
+   Only for keyboard nav, so mouse/touch users don't see it. */
+a:focus-visible,
+button:focus-visible,
+.btn:focus-visible,
+.cat:focus-visible,
+.action:focus-visible,
+.lang-toggle:focus-visible {
+  outline: 3px solid var(--stamp);
+  outline-offset: 2px;
+}
+
+/* Media never overflows its container, regardless of intrinsic size. */
+img, svg, video { max-width: 100%; height: auto; }
 
 a { color: inherit; }
 
@@ -335,12 +365,26 @@ a { color: inherit; }
 .field input, .field textarea, .field select {
   width: 100%;
   font-family: var(--font-mono);
+  /* >=16px (0.95rem of 18px base = 17px) so iOS Safari never zooms on focus. */
   font-size: 0.95rem;
   background: var(--paper);
   border: 2px solid var(--ink);
   padding: 11px 13px;
   color: var(--ink);
   border-radius: var(--radius);
+  /* Strip native control chrome (iOS inset shadow, OS-themed selects) so the
+     brutalist look is identical on Safari / Firefox / Chrome. */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  max-width: 100%;
+}
+/* Custom ink chevron for selects (we removed the native one above). */
+.field select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%231a1714' stroke-width='2'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 13px center;
+  padding-right: 36px;
 }
 .field textarea { min-height: 150px; resize: vertical; line-height: 1.5; }
 .field input:focus, .field textarea:focus, .field select:focus { outline: none; box-shadow: 3px 3px 0 var(--stamp); }
@@ -408,4 +452,41 @@ a { color: inherit; }
 @media (max-width: 640px) {
   .bar-row { grid-template-columns: 120px 1fr 40px; gap: 10px; }
   .bar-row .bar-label { font-size: 0.68rem; }
+}
+
+/* ── Responsive / cross-device hardening ──────────────────────────────────────
+   The masthead (brand + 4 nav links + lang toggle) overflows a single no-wrap
+   row on phones. Let it wrap, tighten gaps, and give links real tap targets. */
+@media (max-width: 720px) {
+  .masthead-row {
+    flex-wrap: wrap;
+    padding: 10px 16px;
+    gap: 8px 14px;
+  }
+  .nav { gap: 6px 16px; flex-wrap: wrap; }
+  /* >=44px tappable height per WCAG / Apple HIG, without visually bloating. */
+  .nav a { padding: 8px 0; }
+  .lang-toggle { padding: 6px 10px; }
+}
+
+/* Very narrow phones: drop the decorative PNR badge, shrink the wordmark, and
+   reclaim horizontal room from the page gutters. */
+@media (max-width: 460px) {
+  .wrap, .masthead-row { padding-left: 16px; padding-right: 16px; }
+  .brand { font-size: 1.15rem; gap: 8px; }
+  .brand .pnr { display: none; }
+  .nav { width: 100%; gap: 4px 14px; }
+  .nav a { font-size: 0.72rem; }
+  .hero { padding: 40px 0 32px; }
+  .section { padding: 44px 0; }
+  .pledge, .witness { padding: 26px; }
+}
+
+/* Coarse pointers (touch): disable the translate/shadow hover lifts that can
+   stick in a pressed state after a tap on mobile. */
+@media (hover: none) {
+  .btn:hover, .cat:hover, .action:hover {
+    transform: none;
+    box-shadow: none;
+  }
 }
